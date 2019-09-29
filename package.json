@@ -1,0 +1,15 @@
+{
+  "name": "@shiftleft/tarpit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "PORT=8089 node index.js"
+  },
+  "author": "Chaitanya Kumar Kamatham <projects+github@kchaitanya.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
