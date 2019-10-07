@@ -1,0 +1,38 @@
+doctype html
+|
+|
+div(style={ margin: '0 auto'})
+  form(
+    method="GET"
+    action="/vulns"
+    style={display: 'flex', 'align-items': 'center', 'flex-direction': 'column'}
+  )
+    h2 Login Form 
+    input(
+      type="text"
+      name="username"
+      placeholder="username"
+      required
+    )
+    |
+    |
+    input(
+      type="password"
+      name="password"
+      placeholder="password"
+      required
+    )
+    |
+    |
+    div
+      label Keep Alive
+      input(
+        type="checkbox"
+        name="keepAlive"
+      )
+    |
+    |
+    button(
+      type="submit"
+    ) Login
+    

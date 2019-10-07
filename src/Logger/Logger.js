@@ -4,6 +4,10 @@ class Logger {
     console.log(redact(str));
   }
 
+  info(str) {
+    console.info(redact(str));
+  }
+
   debug(str) {
     console.debug(redact(str));
   }

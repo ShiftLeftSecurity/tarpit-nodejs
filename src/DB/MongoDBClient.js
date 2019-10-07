@@ -1,23 +1,25 @@
-const mongo = require("mongodb");
-
-const { MongoClient } = mongodb;
+const MongoClient = require("mongodb").MongoClient;
 
 class MongoDBClient {
-  #db = null;
-  #url = null;
-  constructor(host) {
-    this.#url = `mongodb://${host}/mydb`;
+  constructor(host = "localhost", port = "27017") {
+    this.url = `mongodb://${host}:${port}`;
   }
-  connect() {
-    MongoClient.connect(this.url, function(err, db) {
-      if (err) throw err;
-      console.log("Database created!");
-      this.#db = db;
-    });
+  connect(callback) {
+    MongoClient.connect(
+      this.url,
+      { useNewUrlParser: true, useUnifiedTopology: true },
+      (err, db) => {
+        if (!err) {
+          console.log("MongoDB Connected");
+          this.db = db;
+        }
+        callback(err, db);
+      }
+    );
   }
   close() {
-    if (this.#db) {
-      this.#db.close();
+    if (this.db) {
+      this.db.close();
     }
   }
 }
