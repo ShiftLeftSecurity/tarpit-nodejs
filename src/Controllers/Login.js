@@ -2,11 +2,6 @@ const logger = require("../Logger").logger;
 const MongoDBClient = require("../DB").MongoDBClient;
 
 class Login {
-  static registerRoutes(app) {
-    const login = new Login();
-    app.post("/vulns", (req, res) => login.login(req, res));
-  }
-
   loginFailed(req, res, { username, password, keeponline }) {
     res.locals.username = username;
     res.locals.password = password;
@@ -29,7 +24,6 @@ class Login {
         password
       });
       if (result) {
-        console.log(result);
         const user = {
           fname: result.fname,
           lname: result.lname,
@@ -52,11 +46,10 @@ class Login {
 
         res.redirect("/");
       } else {
-        console.log(req.query, result);
         this.loginFailed(req, res, data);
       }
     } catch (ex) {
-      console.error(ex);
+      logger.error(ex);
       this.loginFailed(req, res, data);
     }
   }
@@ -66,7 +59,7 @@ class Login {
     const txns_dir =
       process.env["transactions_folder"] || "/rolling/transactions";
     /*
-      This can be exploited when the request body is
+      This can be exploited (similar to SQL Injection) when the request body is
       {
         "password": {
           "$gt": ""
@@ -84,7 +77,7 @@ class Login {
       keeponline
     } = req.body;
     const data = { username, password, keeponline };
-    console.log(data);
+    logger.debug(data);
     try {
       new MongoDBClient().connect((err, client) => {
         if (client) {
@@ -95,8 +88,7 @@ class Login {
         }
       });
     } catch (ex) {
-      console.log(req.query);
-      console.error(ex);
+      logger.error(ex);
       this.loginFailed(req, res, data);
     }
   }

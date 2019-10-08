@@ -9,7 +9,7 @@ I am using [httpie](https://httpie.org), an alternative to curl to trigger explo
 Login can be exploited using the query as the username and password are not validated
 
 ```
-http  --print=HB POST http://localhost:8089/vulns username:='{"$gt": ""}' password:='{"$gt": ""}'
+http  --print=HB POST http://localhost:8089/api/v1/login username:='{"$gt": ""}' password:='{"$gt": ""}'
 ```
 
 ## Vulnerabilities

@@ -32,7 +32,12 @@ const allRedactions = [
   }
 ];
 
-const matchToRedact = (str, regex, mask) => str.replace(regex, mask);
+const matchToRedact = (str, regex, mask) => {
+  if (str && str.replace) {
+    return str.replace(regex, mask);
+  }
+  return str;
+};
 
 const redact = str => {
   let newStr = str;
