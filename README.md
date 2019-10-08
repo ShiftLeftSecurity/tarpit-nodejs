@@ -14,6 +14,7 @@ http  --print=HB POST http://localhost:8089/api/v1/login username:='{"$gt": ""}'
 
 ## Vulnerabilities
 
-```
-
-```
+- [x] [directory traversal](src/Controllers/ImageLookup.js)
+- [x] [nosql injection](src/Controllers/Login.js)
+- [x] [remote code execution](src/views.js): [UserInput](src/Views/UserInput.pug)
+- [x] [data leak](src/Controllers/Login.js)
