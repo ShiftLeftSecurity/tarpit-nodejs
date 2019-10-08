@@ -1,6 +1,8 @@
 const express = require("express");
 const { logger } = require("./Logger");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+
 const session = require("express-session");
 const Login = require("./Controllers/Login");
 const secured = require("./Controllers/Secured");
@@ -9,6 +11,12 @@ const app = express();
 const port = process.env.PORT || 8088;
 
 const SESSION_SECRET_KEY = "kjhdkd-sjkhsjsh-kjshshkdhsk-jsjhd";
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// parse application/json
+app.use(bodyParser.json());
 
 app.use(cookieParser());
 

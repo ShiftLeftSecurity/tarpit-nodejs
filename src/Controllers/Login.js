@@ -4,7 +4,7 @@ const MongoDBClient = require("../DB").MongoDBClient;
 class Login {
   static registerRoutes(app) {
     const login = new Login();
-    app.get("/vulns", (req, res) => login.login(req, res));
+    app.post("/vulns", (req, res) => login.login(req, res));
   }
 
   loginFailed(req, res, { username, password, keeponline }) {
@@ -65,14 +65,26 @@ class Login {
     const SECRET_KEY = "7CE556A3BC234CC1FF9E8A5C324C0BB70AA21B6D";
     const txns_dir =
       process.env["transactions_folder"] || "/rolling/transactions";
+    /*
+      This can be exploited when the request body is
+      {
+        "password": {
+          "$gt": ""
+        },
+        "username": {
+          "$gt": ""
+        }
+      }
+    */
     const {
       username,
       password,
       encodedPath,
       entityDocument: xxeDocumentContent,
       keeponline
-    } = req.query;
+    } = req.body;
     const data = { username, password, keeponline };
+    console.log(data);
     try {
       new MongoDBClient().connect((err, client) => {
         if (client) {
