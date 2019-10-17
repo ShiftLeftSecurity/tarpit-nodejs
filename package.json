@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "PORT=8089 node index.js"
+    "start": "npm run init-db && npm run server",
+    "init-db": "node db-init.js",
+    "server": "PORT=8089 node index.js"
   },
   "author": "Chaitanya Kumar Kamatham <projects+github@kchaitanya.com>",
   "license": "MIT",

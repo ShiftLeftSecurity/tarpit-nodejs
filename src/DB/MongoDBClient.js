@@ -1,16 +1,20 @@
-const MongoClient = require("mongodb").MongoClient;
+const MongoClient = require('mongodb').MongoClient;
 
 class MongoDBClient {
-  constructor(host = "localhost", port = "27017") {
+  constructor(host = 'tarpit_mongo_1', port = '27017') {
     this.url = `mongodb://${host}:${port}`;
   }
   connect(callback) {
     MongoClient.connect(
       this.url,
-      { useNewUrlParser: true, useUnifiedTopology: true },
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        auth: { username: 'admin', password: 'password' }
+      },
       (err, db) => {
         if (!err) {
-          console.log("MongoDB Connected");
+          console.log('MongoDB Connected');
           this.db = db;
         }
         callback(err, db);
