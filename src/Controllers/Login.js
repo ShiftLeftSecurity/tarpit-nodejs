@@ -1,25 +1,36 @@
-const logger = require("../Logger").logger;
-const MongoDBClient = require("../DB").MongoDBClient;
+const logger = require('../Logger').logger;
+const MongoDBClient = require('../DB').MongoDBClient;
 
 class Login {
   loginFailed(req, res, { username, password, keeponline }) {
     res.locals.username = username;
     res.locals.password = password;
     res.locals.keeponline = keeponline;
-    res.locals.message = "Failed to Sign in. Please verify credentials";
-    res.redirect("/login");
+    res.locals.message = 'Failed to Sign in. Please verify credentials';
+    res.redirect('/login');
+  }
+
+  encryptData(secretText) {
+    const crypto = require('crypto');
+
+    // Weak encryption
+    const desCipher = crypto.createCipheriv(
+      'des',
+      "This is a simple password, don't guess it"
+    );
+    return desCipher.write(secretText, 'utf8', 'hex'); // BAD: weak encryption
   }
 
   async handleLogin(req, res, client, data) {
     const { username, password, keeponline } = data;
     try {
       // DB Query
-      const db = client.db("tarpit", { returnNonCachedInstance: true });
+      const db = client.db('tarpit', { returnNonCachedInstance: true });
       if (!db) {
         this.loginFailed(req, res, data);
         return;
       }
-      const result = await db.collection("tarpit").findOne({
+      const result = await db.collection('users').findOne({
         username,
         password
       });
@@ -32,8 +43,7 @@ class Login {
           address2: result.address2,
           zipCode: result.zipCode
         };
-        // Use Insecure cryptographic algorithm to encrypt credit card and log
-        const creditInfo = result.userCreditCardInfo;
+        const creditInfo = encryptData(result.creditCard);
         logger.info(`user: ${JSON.stringify(user)} successfully logged in`);
         logger.info(
           `user ${user.fname} credit info: ${JSON.stringify(creditInfo)}`
@@ -43,8 +53,9 @@ class Login {
         req.session.cookie.maxAge = 864000;
         req.session.user = JSON.stringify(user);
         req.session.username = username;
+        req.session.cc = creditInfo;
 
-        res.redirect("/");
+        res.redirect('/');
       } else {
         this.loginFailed(req, res, data);
       }
@@ -54,10 +65,6 @@ class Login {
     }
   }
   login(req, res) {
-    const ACCESS_KEY_ID = "AKIA2E0A8F3B244C9986";
-    const SECRET_KEY = "7CE556A3BC234CC1FF9E8A5C324C0BB70AA21B6D";
-    const txns_dir =
-      process.env["transactions_folder"] || "/rolling/transactions";
     /*
       This can be exploited (similar to SQL Injection) when the request body is
       {
@@ -69,13 +76,7 @@ class Login {
         }
       }
     */
-    const {
-      username,
-      password,
-      encodedPath,
-      entityDocument: xxeDocumentContent,
-      keeponline
-    } = req.body;
+    const { username, password, encodedPath, keeponline } = req.body;
     const data = { username, password, keeponline };
     logger.debug(data);
     try {

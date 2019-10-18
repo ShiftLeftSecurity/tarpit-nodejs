@@ -1,26 +1,28 @@
-const secured = require("./Controllers/Secured");
+const secured = require('./Controllers/Secured');
 
 module.exports = app => {
   // Exploits app Env
-  app.get("/env", (req, res) => {
+  app.get('/env', (req, res) => {
     console.log(app.get(req.query.lookup));
     res.send(app.get(req.query.lookup));
   });
-  app.get(`/login`, (req, res) => res.render("Login"));
+  app.get(`/login`, (req, res) => res.render('Login'));
 
-  app.get(`/user-input-vuln`, (req, res) => {
+  app.get(`/user-input`, (req, res) => {
     /*
       User input vulnerability,
       if the user passes vulnerable javascipt code, its executed in user's browser
       ex: alert('hi')
     */
+    let result = '';
     try {
-      eval(req.query.userInput);
+      result = JSON.stringify(eval(req.query.userInput));
     } catch (ex) {
       console.error(ex);
     }
-    res.render("UserInput", {
+    res.render('UserInput', {
       userInput: req.query.userInput,
+      result,
       date: new Date().toUTCString()
     });
   });
