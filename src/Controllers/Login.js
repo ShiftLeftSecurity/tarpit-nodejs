@@ -51,9 +51,9 @@ class Login {
 
         req.session.cookie.username = result.username;
         req.session.cookie.maxAge = 864000;
+        req.session.cookie.cc = creditInfo;
         req.session.user = JSON.stringify(user);
         req.session.username = username;
-        req.session.cc = creditInfo;
 
         res.redirect('/');
       } else {
@@ -64,6 +64,7 @@ class Login {
       this.loginFailed(req, res, data);
     }
   }
+
   login(req, res) {
     /*
       This can be exploited (similar to SQL Injection) when the request body is
