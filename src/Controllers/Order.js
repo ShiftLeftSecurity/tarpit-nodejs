@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const https = require('https');
+const mail = require('../Integrations/Mail');
 
 const encryptionKey = "This is a simple key, don't guess it";
 class Order {
@@ -71,7 +72,7 @@ class Order {
         if (client) {
           const db = client.db('tarpit', { returnNonCachedInstance: true });
           if (!db) {
-            self.loginFailed(req, res, data);
+            throw new Error('DB connection not available', err);
             return;
           }
           const result = await db.collection('users').findOne({
@@ -91,15 +92,28 @@ class Order {
           };
           console.log(transaction);
           await db.collection('transactions').insertOne(transaction);
-          // this.createStripeRequest(result.creditCard, totalPrice, transaction.billingAddress)
+          this.createStripeRequest(
+            result.creditCard,
+            totalPrice,
+            transaction.billingAddress
+          );
+          const message = `
+            Hello ${user.lname},
+              We have processed your order. Please visit the following link to review your order
+              <a href="https://tarpit.com/orders/${username}?ref=mail&transactionId=${transactionId}}">Review Order</a>
+          `;
+          mail.sendMail(
+            'orders@tarpit.com',
+            result.email,
+            `Order Successfully Processed`,
+            message
+          );
         } else {
           console.error(err);
-          self.loginFailed(req, res, data);
         }
       });
     } catch (ex) {
       logger.error(ex);
-      this.loginFailed(req, res, data);
     }
   }
 }

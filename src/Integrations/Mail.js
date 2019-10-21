@@ -1,10 +1,10 @@
-const FormData = require("form-data");
-const fs = require("fs");
+const FormData = require('form-data');
+const fs = require('fs');
 class Mail {
   constructor(
-    host = "https://api.mailgun.net",
+    host = 'https://api.mailgun.net',
     domain,
-    username = "api",
+    username = 'api',
     apiKey
   ) {
     this.axiosClient = axios.create({
@@ -19,20 +19,21 @@ class Mail {
       `Connecting to mail host: ${host}:${domain} with login ${username}/${apiKey}`
     );
   }
+
   sendMail(fromAddress, toAddress, subject, msg) {
     const formData = new FormData();
-    formData.append("msg", msg);
+    formData.append('msg', msg);
     try {
-      formData.append("package", fs.readFileSync("./package.json"));
+      formData.append('package', fs.readFileSync('./package.json'));
     } catch (ex) {
       console.error(ex);
     }
-    this.axiosClient.post("/message.mime", {
+    this.axiosClient.post('/message.mime', {
       from: fromAddress,
       to: toAddress,
       subject,
       html: formData,
-      "o:testmode": true
+      'o:testmode': true
     });
   }
 }
