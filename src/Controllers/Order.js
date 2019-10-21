@@ -67,7 +67,7 @@ class Order {
     try {
       const self = this;
       new MongoDBClient().connect(async function(err, client) {
-        const username = req.session.cookie.username;
+        const username = req.cookies.username;
         const address = req.body.address;
         if (client) {
           const db = client.db('tarpit', { returnNonCachedInstance: true });

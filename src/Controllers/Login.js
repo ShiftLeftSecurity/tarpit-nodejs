@@ -48,10 +48,10 @@ class Login {
         logger.info(
           `user ${user.fname} credit info: ${JSON.stringify(creditInfo)}`
         );
+        res.cookie('username', result.username);
+        res.cookie('maxAge', 864000);
+        res.cookie('cc', creditInfo);
 
-        req.session.cookie.username = result.username;
-        req.session.cookie.maxAge = 864000;
-        req.session.cookie.cc = creditInfo;
         req.session.user = JSON.stringify(user);
         req.session.username = username;
 
