@@ -70,9 +70,9 @@ http GET http://localhost:8089/user-input userInput=="alert('You system is under
 
 ## Vulnerabilities
 
-- [x] [directory traversal](src/Controllers/ImageLookup.js#Ln9)
-- [x] [nosql injection](src/Controllers/Login.js#Ln33...Ln36)
-- [x] [remote code execution](src/views.js#Ln19): [UserInput](src/Views/UserInput.pug#Ln6)
-- [x] [data leak](src/Controllers/Login.js#Ln47)
-- [x] [Inside Attack](src/server.js#L22...Ln31)
-- [x] [Business Logic Flaw](src/Controllers/Order.js#L69...Ln79)
+- [x] [directory traversal](src/Controllers/ImageLookup.js#L9)
+- [x] [nosql injection](src/Controllers/Login.js#Ln33...L36)
+- [x] [remote code execution](src/views.js#L19): [UserInput](src/Views/UserInput.pug#L6)
+- [x] [data leak](src/Controllers/Login.js#L47)
+- [x] [Inside Attack](src/server.js#L22...L31)
+- [x] [Business Logic Flaw](src/Controllers/Order.js#L69...L79)
