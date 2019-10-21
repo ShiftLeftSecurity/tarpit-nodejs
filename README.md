@@ -8,32 +8,33 @@ I am using [httpie](https://httpie.org), an alternative to curl to trigger explo
 
 :crossed_fingers::crossed_fingers::crossed_fingers: I hope all goes as smooth as possible
 
-### Pre-requisites
+### Pre-requisites (Running without docker)
 
 - [NodeJS](https://nodejs.org/en/) Get the latest version
 - [MongoDB Community Edition](https://docs.mongodb.com/manual/administration/install-community/) Install Mongodb Community Edition and run setup provided in documentation
 
-### Setup
+### Pre-requisites (Running with docker)
+
+- Docker
+- Run the command `make start`
+
+### Setup (if not using docker)
 
 start mongoDB server (`sudo mongod`)
 start mongoDB client (`mongo`)
 Insert user rows using the query
 
-```
-use tarpit
-```
-
-```
-db.tarpit.insertOne({ fname: 'f', lname: 'l', passportnum: 'aa', address1: 'a1', address2: 'a2', zipCode: 1234, userCreditCardInfo: 'a8723jjas9892892', password: 'p', username: 'u'})
+```bash
+node db-init.js
 ```
 
-### Installation
+### Installation (if not using docker)
 
 Run `npm install` to install all dependencies for the project to run
 
-### Run Application
+### Run Application (if not using docker)
 
-Run `npm start` to start the application and you will provided a local address to open in browser
+Run `npm run server` to start the application and you will provided a local address to open in browser
 
 ## Exploits
 
@@ -69,7 +70,9 @@ http GET http://localhost:8089/user-input userInput=="alert('You system is under
 
 ## Vulnerabilities
 
-- [x] [directory traversal](src/Controllers/ImageLookup.js)
-- [x] [nosql injection](src/Controllers/Login.js)
-- [x] [remote code execution](src/views.js): [UserInput](src/Views/UserInput.pug)
-- [x] [data leak](src/Controllers/Login.js)
+- [x] [directory traversal](src/Controllers/ImageLookup.js#Ln9)
+- [x] [nosql injection](src/Controllers/Login.js#Ln33...Ln36)
+- [x] [remote code execution](src/views.js#Ln19): [UserInput](src/Views/UserInput.pug#Ln6)
+- [x] [data leak](src/Controllers/Login.js#Ln47)
+- [x] [Inside Attack](src/server.js#L22...Ln31)
+- [x] [Business Logic Flaw](src/Controllers/Order.js#L69...Ln79)

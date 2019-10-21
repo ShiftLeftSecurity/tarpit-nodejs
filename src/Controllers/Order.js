@@ -1,8 +1,8 @@
 const crypto = require('crypto');
 const https = require('https');
 
-const encryptionKey = "This is a simple password, don't guess it";
-export class Order {
+const encryptionKey = "This is a simple key, don't guess it";
+class Order {
   hex(key) {
     // Hash Key
     return key;
@@ -53,27 +53,34 @@ export class Order {
   }
 
   createStripeRequest(creditCard, price, address) {
-    const STRIPE_CLIENT_ID = "AKIA2E0A8F3B244C9986";
-    const STRIPE_CLIENT_SECRET_KEY = "7CE556A3BC234CC1FF9E8A5C324C0BB70AA21B6D";
-    https.request(`http://invalidstripe.com?STRIPE_CLIENT_ID=${STRIPE_CLIENT_ID}&STRIPE_CLIENT_SECRET_KEY=${STRIPE_CLIENT_SECRET_KEY}&price=${price}&address=${JSON.stringify(address)}`)
+    const STRIPE_CLIENT_ID = 'AKIA2E0A8F3B244C9986';
+    const STRIPE_CLIENT_SECRET_KEY = '7CE556A3BC234CC1FF9E8A5C324C0BB70AA21B6D';
+    https.request(
+      `http://invalidstripe.com?STRIPE_CLIENT_ID=${STRIPE_CLIENT_ID}&STRIPE_CLIENT_SECRET_KEY=${STRIPE_CLIENT_SECRET_KEY}&price=${price}&address=${JSON.stringify(
+        address
+      )}`
+    );
   }
 
   async processCC(req, res, orders, totalPrice) {
     try {
-      new MongoDBClient().connect((err, client) => {
+      const self = this;
+      new MongoDBClient().connect(async function(err, client) {
         const username = req.session.cookie.username;
         const address = req.body.address;
         if (client) {
           const db = client.db('tarpit', { returnNonCachedInstance: true });
           if (!db) {
-            this.loginFailed(req, res, data);
+            self.loginFailed(req, res, data);
             return;
           }
           const result = await db.collection('users').findOne({
-            username,
+            username
           });
           const transactionId = crypto.randomBytes(256).toString('hex');
-          await db.collection('orders').insertMany(orders.map(order => ({ ...order, transactionId })));
+          await db
+            .collection('orders')
+            .insertMany(orders.map(order => ({ ...order, transactionId })));
           const transaction = {
             transactionId,
             date: new Date().valueOf(),
@@ -87,7 +94,7 @@ export class Order {
           // this.createStripeRequest(result.creditCard, totalPrice, transaction.billingAddress)
         } else {
           console.error(err);
-          this.loginFailed(req, res, data);
+          self.loginFailed(req, res, data);
         }
       });
     } catch (ex) {
@@ -96,3 +103,5 @@ export class Order {
     }
   }
 }
+
+module.exports = new Order();
